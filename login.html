@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fortes Engenharia - Sistema de Horas Extras</title>
+  <link rel="stylesheet" href="login.css" />
+  <script defer src="login.js"></script>
+
+  <!-- Ícones Lucide -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- SDK de Login com Google -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <i data-lucide="building-2" class="logo" aria-hidden="true"></i>
+      <h1>Fortes Engenharia</h1>
+      <p class="subtitle">Sistema de Controle de Horas Extras</p>
+    </header>
+
+    <main class="form-container">
+      <p class="title">Selecione seu cargo:</p>
+
+      <div class="role-selector" role="tablist" aria-label="Seleção de cargo">
+        <button class="role-btn" data-role="tecnico" aria-pressed="false" role="tab">
+          <i data-lucide="wrench" class="icon" aria-hidden="true"></i>
+          <span class="role-title">Técnico</span>
+          <small class="role-sub">Visualizar informações</small>
+        </button>
+
+        <button class="role-btn" data-role="encarregado" aria-pressed="false" role="tab">
+          <i data-lucide="clipboard" class="icon" aria-hidden="true"></i>
+          <span class="role-title">Encarregado</span>
+          <small class="role-sub">Solicitar horas extras</small>
+        </button>
+
+        <button class="role-btn active" data-role="gestor" aria-pressed="true" role="tab">
+          <i data-lucide="briefcase" class="icon" aria-hidden="true"></i>
+          <span class="role-title">Gestor</span>
+          <small class="role-sub">Aprovar solicitações</small>
+        </button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="entrar">Entrar</button>
+        <button class="tab" data-tab="cadastrar">Cadastrar</button>
+      </div>
+
+      <!-- FORM LOGIN -->
+      <form id="entrar" class="form active">
+        <label>Email</label>
+        <input type="email" placeholder="seu@email.com" required />
+
+        <label>Senha</label>
+        <input type="password" placeholder="Digite sua senha" required />
+
+        <button type="submit" class="btn-primary">Entrar como Gestor</button>
+
+        <div class="divider">ou continue com</div>
+        <div id="google-login" class="google-container" aria-hidden="false"></div>
+
+        <p class="info">Você terá acesso completo para aprovar e gerenciar solicitações.</p>
+      </form>
+
+      <!-- FORM CADASTRO -->
+      <form id="cadastrar" class="form">
+        <label>Nome Completo</label>
+        <input type="text" placeholder="João Silva" required />
+
+        <label>ID / Matrícula</label>
+        <input type="text" placeholder="Digite seu ID ou matrícula" required />
+
+        <label>Email</label>
+        <input type="email" placeholder="seu@email.com" required />
+
+        <label>Telefone</label>
+        <input type="tel" placeholder="(11) 98765-4321" required />
+
+        <label>Senha</label>
+        <input type="password" placeholder="Crie uma senha forte" required />
+
+        <label>Confirmar Senha</label>
+        <input type="password" placeholder="Confirme sua senha" required />
+
+        <button type="submit" class="btn-primary">Cadastrar como Gestor</button>
+
+        <div class="divider">ou cadastre-se com</div>
+        <div id="google-register" class="google-container"></div>
+
+        <p class="info">Você terá acesso completo para aprovar e gerenciar solicitações.</p>
+      </form>
+    </main>
+
+    <footer>
+      <p class="footer-text">© 2025 Fortes Engenharia — Sistema de Gestão de Horas Extras</p>
+    </footer>
+  </div>
+
+  <script>
+    // renderiza ícones Lucide
+    lucide.createIcons();
+  </script>
+</body>
+</html>
