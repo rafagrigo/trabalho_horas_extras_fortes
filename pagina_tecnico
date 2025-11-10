@@ -1,0 +1,667 @@
+Página - Técnico
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortes Engenharia - Sistema de Horas Extras</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Inter', 'Roboto', sans-serif;
+            background-color: #F5F5F5;
+            min-height: 100vh;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: white;
+            border-bottom: 1px solid #E5E7EB;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #2563EB;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #EFF6FF;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            width: 240px;
+            height: calc(100vh - 60px);
+            background: #0F172A;
+            padding-top: 32px;
+            z-index: 900;
+        }
+
+        .sidebar-header {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 0 24px 32px 24px;
+        }
+
+        .sidebar-section {
+            padding: 16px 24px 8px 24px;
+        }
+
+        .sidebar-section-title {
+            color: #94A3B8;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin: 4px 12px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: #94A3B8;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        .sidebar-menu a.active {
+            background: #2563EB;
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 240px;
+            margin-top: 60px;
+            padding: 40px;
+            min-height: calc(100vh - 60px);
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+        }
+
+        .page-title-section h1 {
+            font-size: 32px;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .page-title-section p {
+            color: #6B7280;
+            font-size: 14px;
+        }
+
+        .user-card {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #2563EB;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-info h3 {
+            font-size: 14px;
+            color: #111827;
+            margin-bottom: 2px;
+        }
+
+        .user-info p {
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        /* Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .summary-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .summary-card-header h3 {
+            font-size: 14px;
+            color: #6B7280;
+            font-weight: 500;
+        }
+
+        .summary-card-icon {
+            width: 40px;
+            height: 40px;
+            background: #EFF6FF;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2563EB;
+            font-size: 20px;
+        }
+
+        .summary-card-value {
+            font-size: 40px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .summary-card-subtitle {
+            font-size: 12px;
+            color: #9CA3AF;
+        }
+
+        /* Table Container */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #F9FAFB;
+        }
+
+        thead th {
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: #111827;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #E5E7EB;
+            transition: background 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: #F9FAFB;
+        }
+
+        tbody td {
+            padding: 16px 12px;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-pendente {
+            background: #FEF3C7;
+            color: #F59E0B;
+        }
+
+        .badge-aprovado {
+            background: #D1FAE5;
+            color: #10B981;
+        }
+
+        .badge-reprovado {
+            background: #FEE2E2;
+            color: #EF4444;
+        }
+
+        .badge-realizado {
+            background: #D1FAE5;
+            color: #059669;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #FEF3C7;
+            border-left: 4px solid #F59E0B;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-top: 24px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .info-box-icon {
+            font-size: 20px;
+        }
+
+        .info-box-text {
+            color: #92400E;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Help Button */
+        .help-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            background: #111827;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .help-btn:hover {
+            background: #1F2937;
+            transform: scale(1.05);
+        }
+
+        /* Page Transitions */
+        .page-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 800px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <button class="nav-btn" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i>
+            Voltar
+        </button>
+        <button class="nav-btn" onclick="goHome()">
+            <i class="fas fa-home"></i>
+            Início
+        </button>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">Fortes Engenharia</div>
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">
+                HORAS EXTRAS
+                <i class="fas fa-chevron-up"></i>
+            </div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="#" class="active" data-page="solicitadas">
+                        <i class="far fa-clock"></i>
+                        Solicitadas
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-page="cumpridas">
+                        <i class="fas fa-check"></i>
+                        Cumpridas
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Page: Solicitadas -->
+        <div class="page-content active" id="solicitadas">
+            <div class="page-header">
+                <div class="page-title-section">
+                    <h1>Horas Extras Solicitadas</h1>
+                    <p>Visualize e planeje suas horas extras solicitadas</p>
+                </div>
+                <div class="user-card">
+                    <div class="user-avatar">JP</div>
+                    <div class="user-info">
+                        <h3>João Pedro</h3>
+                        <p>Técnico</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Horário</th>
+                            <th>Gestor</th>
+                            <th>Hora</th>
+                            <th>Data</th>
+                            <th>Duração</th>
+                            <th>Valor</th>
+                            <th>Comentários</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Manhã</td>
+                            <td>Carlos Silva</td>
+                            <td>08:00</td>
+                            <td>15/11/2025</td>
+                            <td>4h</td>
+                            <td>R$ 120,00</td>
+                            <td>Manutenção urgente no equipamento A3</td>
+                            <td><span class="badge badge-pendente">Pendente</span></td>
+                        </tr>
+                        <tr>
+                            <td>Tarde</td>
+                            <td>Maria Santos</td>
+                            <td>14:00</td>
+                            <td>16/11/2025</td>
+                            <td>3h</td>
+                            <td>R$ 90,00</td>
+                            <td>Instalação de novos componentes</td>
+                            <td><span class="badge badge-aprovado">Aprovado</span></td>
+                        </tr>
+                        <tr>
+                            <td>Noite</td>
+                            <td>Carlos Silva</td>
+                            <td>18:00</td>
+                            <td>18/11/2025</td>
+                            <td>2h</td>
+                            <td>R$ 60,00</td>
+                            <td>Suporte técnico emergencial</td>
+                            <td><span class="badge badge-pendente">Pendente</span></td>
+                        </tr>
+                        <tr>
+                            <td>Manhã</td>
+                            <td>Ana Costa</td>
+                            <td>09:00</td>
+                            <td>20/11/2025</td>
+                            <td>5h</td>
+                            <td>R$ 150,00</td>
+                            <td>Treinamento da equipe nova</td>
+                            <td><span class="badge badge-reprovado">Reprovado</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-icon">💡</div>
+                <div class="info-box-text">
+                    <strong>Dica:</strong> Utilize esta tela para planejar sua agenda. As horas extras pendentes ainda aguardam aprovação do gestor.
+                </div>
+            </div>
+        </div>
+
+        <!-- Page: Cumpridas -->
+        <div class="page-content" id="cumpridas">
+            <div class="page-header">
+                <div class="page-title-section">
+                    <h1>Horas Extras Cumpridas</h1>
+                    <p>Histórico de horas extras já realizadas</p>
+                </div>
+                <div class="user-card">
+                    <div class="user-avatar">JP</div>
+                    <div class="user-info">
+                        <h3>João Pedro</h3>
+                        <p>Técnico</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="summary-card-header">
+                        <h3>Total de Horas Cumpridas</h3>
+                        <div class="summary-card-icon">
+                            <i class="far fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="summary-card-value">13h</div>
+                    <div class="summary-card-subtitle">Soma de todas as horas extras realizadas</div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-card-header">
+                        <h3>Total em Valores</h3>
+                        <div class="summary-card-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                    <div class="summary-card-value">R$ 390,00</div>
+                    <div class="summary-card-subtitle">Soma dos valores das horas extras</div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Horário</th>
+                            <th>Gestor</th>
+                            <th>Hora</th>
+                            <th>Data</th>
+                            <th>Duração</th>
+                            <th>Valor</th>
+                            <th>Comentários</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Manhã</td>
+                            <td>Carlos Silva</td>
+                            <td>07:00</td>
+                            <td>01/11/2025</td>
+                            <td>4h</td>
+                            <td>R$ 120,00</td>
+                            <td>Revisão completa do sistema</td>
+                            <td><span class="badge badge-realizado">Realizado</span></td>
+                        </tr>
+                        <tr>
+                            <td>Tarde</td>
+                            <td>Maria Santos</td>
+                            <td>13:00</td>
+                            <td>05/11/2025</td>
+                            <td>6h</td>
+                            <td>R$ 180,00</td>
+                            <td>Atualização de software crítico</td>
+                            <td><span class="badge badge-realizado">Realizado</span></td>
+                        </tr>
+                        <tr>
+                            <td>Noite</td>
+                            <td>Ana Costa</td>
+                            <td>19:00</td>
+                            <td>08/11/2025</td>
+                            <td>3h</td>
+                            <td>R$ 90,00</td>
+                            <td>Manutenção preventiva</td>
+                            <td><span class="badge badge-realizado">Realizado</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-icon">💡</div>
+                <div class="info-box-text">
+                    <strong>Dica:</strong> Utilize esta tela para planejar sua agenda. Você pode revisar suas horas extras cumpridas para controle pessoal.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Button -->
+    <button class="help-btn" onclick="alert('Entre em contato com o suporte para ajuda.')">
+        <i class="fas fa-question"></i>
+    </button>
+
+    <script>
+        // Navigation between pages
+        document.querySelectorAll('.sidebar-menu a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = this.dataset.page;
+                
+                // Update active menu item
+                document.querySelectorAll('.sidebar-menu a').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show selected page
+                document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+                document.getElementById(page).classList.add('active');
+            });
+        });
+
+        // Top navigation buttons
+        function goBack() {
+            alert('Voltando à página anterior...');
+            // window.history.back();
+        }
+
+        function goHome() {
+            alert('Redirecionando para a página inicial...');
+            // window.location.href = '/';
+        }
+
+        // Mobile menu toggle (for responsive)
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('open');
+        }
+    </script>
+</body>
+</html>
