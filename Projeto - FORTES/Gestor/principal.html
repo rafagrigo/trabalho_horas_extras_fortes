@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Fortes Engenharia — Gestão de Horas Extras</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="principal.css"/>
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <img src="Logo Fortes.jpg" alt="Fortes Engenharia">
+    </div>
+
+    <div class="section-title">HORAS EXTRAS</div>
+
+    <nav class="menu" role="navigation" aria-label="Menu principal">
+      <button class="menu-item active" data-page="pendentes" id="menu-pendentes">
+        <i data-feather="clock"></i><span>Solicitadas</span>
+      </button>
+      <button class="menu-item" data-page="cumpridas" id="menu-cumpridas">
+        <i data-feather="check"></i><span>Cumpridas</span>
+      </button>
+      <button class="menu-item" data-page="tecnicos" id="menu-tecnicos">
+        <i data-feather="users"></i><span>Técnicos</span>
+      </button>
+      <button class="menu-item" data-page="obras" id="menu-obras">
+        <i data-feather="briefcase"></i><span>Obras</span>
+      </button>
+      <button class="menu-item" data-page="historico" id="menu-historico">
+        <i data-feather="clock"></i><span>Histórico</span>
+      </button>
+    </nav>
+  </aside>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-right">
+      <button class="user-info" id="userInfoBtn" aria-haspopup="true" aria-expanded="false">
+        <div class="user-avatar">RM</div>
+        <div class="user-details">
+          <div class="user-name">Ricardo Mendes</div>
+          <div class="user-role">Gestor</div>
+        </div>
+      </button>
+      <button class="btn btn-outline nav-exit" id="btnSair" title="Sair">
+        <i data-feather="log-out"></i> Sair
+      </button>
+    </div>
+
+    <!-- DROPDOWN PERFIL -->
+    <div id="profileDropdown" class="profile-dropdown hidden" role="menu" aria-label="Perfil">
+      <div class="profile-header">
+        <div class="ph-name">Ricardo Mendes</div>
+        <div class="ph-email">ricardo.mendes@fortes.eng</div>
+      </div>
+      <div class="profile-rows">
+        <div class="row"><span>Usuário:</span><strong>rmendes</strong></div>
+        <div class="row"><span>Telefone:</span><strong>(27) 99999–8888</strong></div>
+      </div>
+      <div class="profile-actions">
+        <button class="profile-btn" id="openPassword">Mudar Senha</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main-content" id="mainContent">
+    <!-- SOLICITADAS -->
+    <section class="page" id="page-pendentes" data-page="pendentes">
+      <header class="page-header">
+        <h1>Solicitações Pendentes</h1>
+        <p class="subtitle">Gerencie as solicitações de horas extras pendentes</p>
+      </header>
+
+      <div class="card saldo-card">
+        <div class="saldo-left">
+          <div class="label">Saldo Disponível</div>
+          <div class="valor" id="saldoValor">R$ 50.000,00</div>
+          <div class="desc">Orçamento disponível para horas extras</div>
+        </div>
+        <div class="saldo-icon"><i data-feather="wallet"></i></div>
+      </div>
+
+      <!-- Ações pendentes -->
+      <div class="actions-row" id="actions-pendentes"></div>
+
+      <!-- Lista de solicitações -->
+      <div id="listaSolicitacoes" class="solicitacoes-list"></div>
+
+      <div class="info-alert info-blue">
+        <div class="info-icon"><i data-feather="info"></i></div>
+        <div class="info-text">Dica: Analise cuidadosamente cada solicitação antes de aprovar ou recusar.</div>
+      </div>
+    </section>
+
+    <!-- CUMPRIDAS -->
+    <section class="page" id="page-cumpridas" data-page="cumpridas" hidden>
+      <header class="page-header">
+        <h1>Horas Extras Cumpridas</h1>
+        <p class="subtitle">Visualize as horas extras já cumpridas</p>
+      </header>
+
+      <div class="card saldo-card">
+        <div class="saldo-left">
+          <div class="label">Despesas</div>
+          <div class="valor" id="despesasValor">R$ 0,00</div>
+          <div class="desc">Total de gastos com horas extras cumpridas</div>
+        </div>
+        <div class="saldo-icon"><i data-feather="dollar-sign"></i></div>
+      </div>
+
+      <!-- Ações cumpridas -->
+      <div class="actions-row" id="actions-cumpridas"></div>
+
+      <div class="table-card table-card-padded">
+        <div class="table-header tight full">
+          <div class="th">Técnico <span class="th-sort" data-k="tecnico">↕</span></div>
+          <div class="th">Encarregado <span class="th-sort" data-k="encarregado">↕</span></div>
+          <div class="th">Obra <span class="th-sort" data-k="obra">↕</span></div>
+          <div class="th">Data <span class="th-sort" data-k="data">↕</span></div>
+          <div class="th">Duração <span class="th-sort" data-k="duracaoNum">↕</span></div>
+          <div class="th">Custo <span class="th-sort" data-k="custo">↕</span></div>
+        </div>
+        <div id="tabelaCumpridas" class="table-body cards"></div>
+      </div>
+
+      <div class="info-alert info-blue">
+        <div class="info-icon"><i data-feather="info"></i></div>
+        <div class="info-text">Dica: Utilize este relatório para acompanhar a execução das horas extras.</div>
+      </div>
+    </section>
+
+    <!-- TÉCNICOS -->
+    <section class="page" id="page-tecnicos" data-page="tecnicos" hidden>
+      <header class="page-header">
+        <h1>Técnicos</h1>
+        <p class="subtitle">Acompanhe os técnicos e seus custos com horas extras</p>
+      </header>
+
+      <div class="card saldo-card">
+        <div class="saldo-left">
+          <div class="label">Despesas</div>
+          <div class="valor" id="despesasTecnicos">R$ 0,00</div>
+          <div class="desc">Total de gastos com horas extras por técnicos</div>
+        </div>
+        <div class="saldo-icon"><i data-feather="dollar-sign"></i></div>
+      </div>
+
+      <!-- Filtros + Ações -->
+      <div class="filters-row">
+        <input id="buscaTecnico" class="form-input" placeholder="Buscar técnico por nome">
+        <select id="filtroHoras" class="form-input">
+          <option value="all">Filtrar por horas</option>
+          <option value="<=20">Até 20h</option>
+          <option value="21-30">21h a 30h</option>
+          <option value=">30">Mais de 30h</option>
+        </select>
+        <div class="spacer"></div>
+        <div class="actions-inline" id="actions-tecnicos"></div>
+        <button id="btnNovoTecnico" class="btn ghost lift-sm"><i data-feather="plus"></i> Novo Técnico</button>
+      </div>
+
+      <div class="table-card">
+        <div class="table-header tight">
+          <div class="th">Nome <span class="th-sort" data-k="nome">↕</span></div>
+          <div class="th">Horas extras / mês <span class="th-sort" data-k="horasNum">↕</span></div>
+          <div class="th">Total <span class="th-sort" data-k="custo">↕</span></div>
+        </div>
+        <div id="tabelaTecnicos" class="table-body"></div>
+      </div>
+
+      <div class="info-alert info-blue">
+        <div class="info-icon"><i data-feather="info"></i></div>
+        <div class="info-text">Dica: Monitore os custos por técnico para melhor controle do orçamento.</div>
+      </div>
+    </section>
+
+    <!-- OBRAS -->
+    <section class="page" id="page-obras" data-page="obras" hidden>
+      <header class="page-header">
+        <h1>Obras</h1>
+        <p class="subtitle">Visualize os custos com horas extras por obra</p>
+      </header>
+
+      <div class="card saldo-card">
+        <div class="saldo-left">
+          <div class="label">Total em Obras</div>
+          <div class="valor" id="totalObras">R$ 0,00</div>
+          <div class="desc">Soma dos gastos em horas extras por obras</div>
+        </div>
+        <div class="saldo-icon"><i data-feather="credit-card"></i></div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-header tight">
+          <div class="th">Obra <span class="th-sort" data-k="obra">↕</span></div>
+          <div class="th">Horas Extras Totais <span class="th-sort" data-k="horasNum">↕</span></div>
+          <div class="th">Total de Técnicos <span class="th-sort" data-k="tecnicos">↕</span></div>
+          <div class="th">Valor Total <span class="th-sort" data-k="valor">↕</span></div>
+        </div>
+        <div id="tabelaObras" class="table-body"></div>
+      </div>
+
+      <div class="info-alert info-blue">
+        <div class="info-icon"><i data-feather="info"></i></div>
+        <div class="info-text">Dica: Acompanhe os custos com horas extras por obra para planejamento futuro.</div>
+      </div>
+    </section>
+
+    <!-- HISTÓRICO -->
+    <section class="page" id="page-historico" data-page="historico" hidden>
+      <header class="page-header">
+        <h1>Histórico</h1>
+        <p class="subtitle">Consulte o histórico de aprovações e recusas</p>
+      </header>
+
+      <div class="actions-row" id="actions-historico"></div>
+
+      <div class="table-card">
+        <div class="table-header tight">
+          <div class="th">Status</div>
+          <div class="th">Data Recebimento <span class="th-sort" data-k="dataRecebimento">↕</span></div>
+          <div class="th">Encarregado <span class="th-sort" data-k="encarregado">↕</span></div>
+          <div class="th">Técnico <span class="th-sort" data-k="tecnico">↕</span></div>
+          <div class="th">Obra <span class="th-sort" data-k="obra">↕</span></div>
+          <div class="th">Data <span class="th-sort" data-k="data">↕</span></div>
+          <div class="th">Duração <span class="th-sort" data-k="duracaoNum">↕</span></div>
+          <div class="th">Custo <span class="th-sort" data-k="custo">↕</span></div>
+          <div class="th">Ação</div>
+        </div>
+        <div id="tabelaHistorico" class="table-body"></div>
+      </div>
+
+      <div class="info-alert info-blue">
+        <div class="info-icon"><i data-feather="info"></i></div>
+        <div class="info-text">Dica: Use a opção “Desfazer” caso precise reverter uma decisão.</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- OVERLAY (blur para modais) -->
+  <div id="overlay" class="overlay" hidden></div>
+
+  <!-- Modais (Aprovar / Recusar / Desfazer) -->
+  <div class="modal" id="modalAprovar" role="dialog" aria-modal="true" hidden>
+    <div class="modal-content">
+      <h2>Aprovar Hora Extra</h2>
+      <p id="aprovarTexto">Deseja confirmar a aprovação da hora extra?</p>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="aprovarCancelar">Cancelar</button>
+        <button class="btn btn-success" id="aprovarConfirmar"><i data-feather="check"></i> Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modalRecusar" role="dialog" aria-modal="true" hidden>
+    <div class="modal-content wide">
+      <button class="modal-x icon-only" id="recusarClose" aria-label="Fechar"><i data-feather="x"></i></button>
+      <h2>Recusar Hora Extra</h2>
+      <p id="recusarTexto">Adicione uma justificativa para recusar a hora extra</p>
+      <label class="form-label">Justificativa</label>
+      <textarea id="justificativa" class="form-textarea" placeholder="Descreva o motivo da recusa..."></textarea>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="recusarCancelar">Cancelar</button>
+        <button class="btn btn-danger" id="recusarConfirmar"><i data-feather="x"></i> Confirmar Recusa</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modalDesfazer" role="dialog" aria-modal="true" hidden>
+    <div class="modal-content">
+      <h2>Desfazer Ação</h2>
+      <p id="desfazerTexto">Deseja desfazer a ação?</p>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="desfazerCancelar">Cancelar</button>
+        <button class="btn btn-primary" id="desfazerConfirmar"><i data-feather="rotate-ccw"></i> Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Alterar Senha -->
+  <div id="modalPassword" class="modal-overlay" aria-hidden="true">
+    <div class="modal-box modal-medium">
+      <button class="modal-x icon-only" id="passwordClose" aria-label="Fechar"><i data-feather="x"></i></button>
+      <h2 class="modal-title">Alterar Senha</h2>
+      <p class="modal-text">Insira sua nova senha e confirme.</p>
+      <form id="passwordForm" novalidate>
+        <div class="form-group">
+          <label class="form-label">Nova Senha <span class="required">*</span></label>
+          <input type="password" class="form-input" id="newPassword" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirmar Nova Senha <span class="required">*</span></label>
+          <input type="password" class="form-input" id="confirmPassword" required>
+          <div id="passwordError" class="form-error" hidden></div>
+          <div id="passwordOk" class="form-success" hidden></div>
+        </div>
+        <div class="modal-buttons">
+          <button type="button" class="btn btn-outline" id="passwordCancel">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Remover Técnico -->
+  <div class="modal" id="modalRemoveTec" role="dialog" aria-modal="true" hidden>
+    <div class="modal-content">
+      <button class="modal-x icon-only" id="rmTecClose" aria-label="Fechar"><i data-feather="x"></i></button>
+      <h2>Remover Técnico</h2>
+      <p id="rmTecTexto"></p>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="rmTecCancel">Cancelar</button>
+        <button class="btn btn-danger" id="rmTecConfirm">Remover</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Novo Técnico -->
+  <div class="modal" id="modalNovoTec" role="dialog" aria-modal="true" hidden>
+    <div class="modal-content wide">
+      <button class="modal-x icon-only" id="novoTecClose" aria-label="Fechar"><i data-feather="x"></i></button>
+      <h2>Cadastrar Novo Técnico</h2>
+      <p>Informe os dados do novo técnico para adicioná-lo à lista.</p>
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Nome completo <span class="required">*</span></label>
+          <input id="novoNome" class="form-input" placeholder="Ex.: Paulo Souza">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Horas extras / mês <span class="required">*</span></label>
+          <input id="novoHoras" class="form-input" placeholder="Ex.: 12" type="number" min="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Total (R$) <span class="required">*</span></label>
+          <input id="novoTotal" class="form-input" placeholder="Ex.: 360" type="number" min="0" step="0.01">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="novoTecCancel">Cancelar</button>
+        <button class="btn btn-primary" id="novoTecAdd">Adicionar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Suporte TI -->
+  <div class="modal" id="modalSuporte" role="dialog" aria-modal="true" hidden>
+    <div class="modal-content wide">
+      <button class="modal-x icon-only" id="suporteClose" aria-label="Fechar"><i data-feather="x"></i></button>
+      <h2>Suporte de TI</h2>
+      <p>Descreva rapidamente seu problema. Você pode enviar por e-mail ou WhatsApp do suporte.</p>
+      <label class="form-label">Mensagem</label>
+      <textarea id="suporteMsg" class="form-textarea" placeholder="Ex.: Erro ao solicitar hora extra para João..."></textarea>
+      <div class="grid-2-2">
+        <div class="info-line">
+          <strong>E-mail:</strong> <span id="suporteEmail">ti@fortes.eng</span>
+          <button class="btn ghost" id="copyEmail">Copiar</button>
+        </div>
+        <div class="info-line">
+          <strong>Telefone:</strong> <span id="suporteTel">(27) 99999-0000</span>
+          <button class="btn ghost" id="copyTel">Copiar</button>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn lift-sm" id="btnWhats">WhatsApp</button>
+        <button class="btn btn-primary lift-sm" id="btnMail">Enviar por E-mail</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botão flutuante de suporte -->
+  <button id="btnSuporte" class="btn-support" title="Suporte de TI">
+    <i data-feather="help-circle"></i>
+  </button>
+
+  <script src="principal.js"></script>
+  <script> if (window.feather) feather.replace(); </script>
+</body>
+</html>
